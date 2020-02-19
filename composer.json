@@ -1,0 +1,24 @@
+{
+    "name": "kstupak/rad-toolkit",
+    "type": "library",
+    "description": "Parts of symfony application that I need every time and don't want to re-implement all the time",
+    "require": {
+        "ramsey/uuid": "^3.9",
+        "ramsey/uuid-doctrine": "^1.6",
+        "jms/serializer-bundle": "^3.5",
+        "nikic/iter": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "KStupak\\RAD\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kostiantyn Stupak",
+            "email": "konstantin.stupak@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
