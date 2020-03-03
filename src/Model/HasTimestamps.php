@@ -11,6 +11,7 @@
 
 declare(strict_types=1);
 
+namespace KStupak\RAD\Model;
 
 trait HasTimestamps
 {
@@ -26,12 +27,12 @@ trait HasTimestamps
         $this->updated = new \DateTimeImmutable();
     }
 
-    public function getCreated(): DateTimeImmutable
+    public function getCreated(): \DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function getUpdated(): DateTimeImmutable
+    public function getUpdated(): \DateTimeImmutable
     {
         return $this->updated;
     }
