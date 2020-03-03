@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace KStupak\RAD;
+namespace KStupak\RAD\Model;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
