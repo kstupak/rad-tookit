@@ -43,4 +43,33 @@ trait ControllerTrait
     {
         return $this->serializer->deserialize($request->getContent(), $className, 'json');
     }
+
+    private function getRequestContent(Request $request): ?string
+    {
+        $rawContent = $request->getContent();
+        $decoded = \json_decode($rawContent, true);
+
+        return (string) $decoded ?? $rawContent;
+    }
+
+    private function getJsonRequestField(Request $request, string $field, $default = null): ?string
+    {
+        $content = $this->getRequestContent($request);
+        return \array_key_exists($field, $content) ? $content[$field] : $default;
+    }
+
+    private function getListResponse($data): Response
+    {
+        return $this->getResponse($data, Response::HTTP_OK, ['list']);
+    }
+
+    private function getViewResponse($data): Response
+    {
+        return $this->getResponse($data, Response::HTTP_OK, ['view']);
+    }
+
+    private function getCreatedResponse($data): Response
+    {
+        return $this->getResponse($data, Response::HTTP_CREATED, ['view']);
+    }
 }
