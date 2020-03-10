@@ -44,12 +44,13 @@ trait ControllerTrait
         return $this->serializer->deserialize($request->getContent(), $className, 'json');
     }
 
-    private function getRequestContent(Request $request): ?string
+    /** @return array|string|int|float|bool */
+    private function getRequestContent(Request $request)
     {
         $rawContent = $request->getContent();
         $decoded = \json_decode($rawContent, true);
 
-        return (string) $decoded ?? $rawContent;
+        return $decoded ?? $rawContent;
     }
 
     private function getJsonRequestField(Request $request, string $field, $default = null): ?string
