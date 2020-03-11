@@ -53,7 +53,8 @@ trait ControllerTrait
         return $decoded ?? $rawContent;
     }
 
-    private function getJsonRequestField(Request $request, string $field, $default = null): ?string
+    /** @return array|string|int|float|bool|null */
+    private function getJsonRequestField(Request $request, string $field, $default = null)
     {
         $content = $this->getRequestContent($request);
         return \array_key_exists($field, $content) ? $content[$field] : $default;
