@@ -35,7 +35,7 @@ trait FilterableRepositoryTrait
         $search->getFilters()->map(static fn(DoctrineFilter $filter) => $filter->applyTo($query, $this->entityAlias));
 
         if (!is_null($search->getQuery())) {
-            $queries = \array_map(fn(string $field) => $query->expr()->like(sprintf('%s.%s', $this->entityAlias, $field), $search->getQuery()), $this->searchableFields);
+            $queries = \array_map(static fn(string $field) => $query->expr()->like(sprintf('%s.%s', $this->entityAlias, $field), $search->getQuery()), $this->searchableFields);
             $query->andWhere($query->expr()->orX(...$queries));
         }
 

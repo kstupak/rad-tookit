@@ -15,14 +15,14 @@ namespace KStupak\RAD\Model\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 
-class MultipleValuesFilter implements DoctrineFilter
+abstract class MultipleValuesFilter implements DoctrineFilter
 {
     private array $value = [];
     private ?bool $inverted;
 
     protected string $columnName;
 
-    private function __construct($value, ?bool $inverted = false)
+    protected function __construct($value, ?bool $inverted = false)
     {
         $this->value    = is_array($value) ? $value : [$value];
         $this->inverted = $inverted;
@@ -30,7 +30,7 @@ class MultipleValuesFilter implements DoctrineFilter
 
     public static function createForValue($value, ?bool $invert = false): DoctrineFilter
     {
-        return new self($value, $invert);
+        return static::getInstance($value, $invert);
     }
 
     public function applyTo(QueryBuilder $builder, string $alias): void
@@ -58,4 +58,6 @@ class MultipleValuesFilter implements DoctrineFilter
     {
         return sprintf('%sValue', $this->columnName);
     }
+
+    abstract protected static function getInstance($value, $inverted): self;
 }

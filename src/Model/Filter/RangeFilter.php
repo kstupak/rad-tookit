@@ -15,7 +15,7 @@ namespace KStupak\RAD\Model\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 
-class RangeFilter implements DoctrineFilter
+abstract class RangeFilter implements DoctrineFilter
 {
     protected string $columnName;
     protected string $exclude = 'both'; // possible values are: start, end, both, none
@@ -23,7 +23,7 @@ class RangeFilter implements DoctrineFilter
     private $rangeStart;
     private $rangeEnd;
 
-    private function __construct(array $value, ?bool $inverted = false)
+    protected function __construct(array $value, ?bool $inverted = false)
     {
         [$this->rangeStart, $this->rangeEnd] = $value;
         $this->inverted = $inverted;
@@ -43,7 +43,7 @@ class RangeFilter implements DoctrineFilter
             $value = \array_slice($value, 0, 2);
         }
 
-        return new self($value, $invert);
+        return static::getInstance($value, $invert);
     }
 
     public function applyTo(QueryBuilder $builder, string $alias): void
@@ -77,4 +77,6 @@ class RangeFilter implements DoctrineFilter
     {
         return sprintf('%s_range%s', $this->columnName, ucwords($position));
     }
+
+    abstract protected static function getInstance($value, $inverted): self;
 }
