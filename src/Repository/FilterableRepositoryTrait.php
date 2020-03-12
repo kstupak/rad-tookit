@@ -31,13 +31,16 @@ trait FilterableRepositoryTrait
 
     public function filter(Search $search): Collection
     {
-        $alias = $this->entityAlias;
-        $query = $this->createQueryBuilder($alias);
-        $search->getFilters()->map(static fn(DoctrineFilter $filter) => $filter->applyTo($query, $alias));
+        $query = $this->createQueryBuilder($this->entityAlias);
+        $search->getFilters()->map(fn(DoctrineFilter $filter) => $filter->applyTo($query, $this->entityAlias));
 
         if (!is_null($search->getQuery())) {
-            $fields = $this->searchableFields;
-            $queries = \array_map(static fn(string $field) => $query->expr()->like(sprintf('%s.%s', $alias, $field), $search->getQuery()), $fields);
+            $queries = \array_map(function(string $field) use ($query, $search) {
+                return $query->expr()->like(
+                    sprintf('%s.%s', $this->entityAlias, $field),
+                    sprintf('\'%%%s%%\'', $search->getQuery())
+                );
+            }, $this->searchableFields);
             $query->andWhere($query->expr()->orX(...$queries));
         }
 
@@ -50,7 +53,7 @@ trait FilterableRepositoryTrait
         $count = $query->select(sprintf('COUNT(%s)', $this->entityAlias))
             ->getQuery()->getSingleScalarResult();
 
-        $search->getPagination()->setTotal($count);
+        $search->getPagination()->setTotal((int) $count);
 
         return new ArrayCollection($data);
     }

@@ -78,7 +78,7 @@ trait FilterFactory
             'prev'  => 'getPrevious',
         ];
 
-        $headerTemplate = '<%s?%s&take=%d&page=%d>; rel="%s"';
+        $headerTemplate = '<%s?%s&page=%d&take=%d>; rel="%s"';
 
         $params = $searchConfiguration->getQuery()
             ? array_merge(['query' => $searchConfiguration->getQuery()], $queryParams)
@@ -88,7 +88,7 @@ trait FilterFactory
 
         foreach ($relations as $relation => $method) {
             $page      = call_user_func([$searchConfiguration->getPagination(), $method]);
-            $headers[] = sprintf($headerTemplate, $referrerUrl, $queryParams, $searchConfiguration->getPagination()->getPageSize(), $page, $relation);
+            $headers[] = sprintf($headerTemplate, $referrerUrl, $queryParams, $page, $searchConfiguration->getPagination()->getPageSize(), $relation);
         }
 
         $response->headers->set('Link', join(',', $headers));
