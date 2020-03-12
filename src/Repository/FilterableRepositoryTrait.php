@@ -31,11 +31,13 @@ trait FilterableRepositoryTrait
 
     public function filter(Search $search): Collection
     {
-        $query = $this->createQueryBuilder($this->entityAlias);
-        $search->getFilters()->map(static fn(DoctrineFilter $filter) => $filter->applyTo($query, $this->entityAlias));
+        $alias = $this->entityAlias;
+        $query = $this->createQueryBuilder($alias);
+        $search->getFilters()->map(static fn(DoctrineFilter $filter) => $filter->applyTo($query, $alias));
 
         if (!is_null($search->getQuery())) {
-            $queries = \array_map(static fn(string $field) => $query->expr()->like(sprintf('%s.%s', $this->entityAlias, $field), $search->getQuery()), $this->searchableFields);
+            $fields = $this->searchableFields;
+            $queries = \array_map(static fn(string $field) => $query->expr()->like(sprintf('%s.%s', $alias, $field), $search->getQuery()), $fields);
             $query->andWhere($query->expr()->orX(...$queries));
         }
 
