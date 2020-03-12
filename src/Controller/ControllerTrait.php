@@ -28,6 +28,12 @@ trait ControllerTrait
             'Content-Type' => 'application/json;charset=UTF-8'
         ]);
 
+        $data = $this->preparePayload($data, $groups);
+        return new Response($data, $code, $headers);
+    }
+
+    private function preparePayload($data, $groups): string
+    {
         $context = new SerializationContext();
         $context->setSerializeNull(true);
 
@@ -35,8 +41,7 @@ trait ControllerTrait
             $context->setGroups($groups);
         }
 
-        $data = $this->serializer->serialize($data, 'json', $context);
-        return new Response($data, $code, $headers);
+        return $this->serializer->serialize($data, 'json', $context);
     }
 
     private function extract(Request $request, string $className): object
@@ -73,5 +78,10 @@ trait ControllerTrait
     private function getCreatedResponse($data): Response
     {
         return $this->getResponse($data, Response::HTTP_CREATED, ['view']);
+    }
+
+    private function getEmptySuccessResponse(): Response
+    {
+        return new Response();
     }
 }
