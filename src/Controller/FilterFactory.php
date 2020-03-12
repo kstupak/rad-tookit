@@ -94,4 +94,9 @@ trait FilterFactory
         $response->headers->set('Link', join(',', $headers));
         $response->headers->set('X-Total', (string) $searchConfiguration->getPagination()->getTotal());
     }
+
+    private function getSearchConfigFromRequest(Request $request): Search
+    {
+        return new Search($request->get('query'), $this->getFilters($request), $this->extractPagination($request));
+    }
 }
