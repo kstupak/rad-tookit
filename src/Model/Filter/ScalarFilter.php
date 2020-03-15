@@ -15,15 +15,14 @@ namespace KStupak\RAD\Model\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 
-abstract class ScalarFilter implements DoctrineFilter
+/** @property string $columnName */
+trait ScalarFilter
 {
     /** @var string|int|float */
     private $value;
     private ?bool $inverted;
 
-    protected string $columnName;
-
-    protected function __construct($value, ?bool $inverted = false)
+    private function __construct($value, ?bool $inverted = false)
     {
         $this->value    = $value;
         $this->inverted = $inverted;
@@ -31,7 +30,7 @@ abstract class ScalarFilter implements DoctrineFilter
 
     public static function createForValue($value, ?bool $invert = false): DoctrineFilter
     {
-        return static::getInstance($value, $invert);
+        return new self($value, $invert);
     }
 
     public function applyTo(QueryBuilder $builder, string $alias): void
@@ -59,6 +58,4 @@ abstract class ScalarFilter implements DoctrineFilter
     {
         return sprintf('%sValue', $this->columnName);
     }
-
-    abstract protected static function getInstance($value, $inverted): self;
 }

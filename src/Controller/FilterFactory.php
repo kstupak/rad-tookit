@@ -68,7 +68,9 @@ trait FilterFactory
         Search $searchConfiguration
     ) : void {
         $queryParams = $this->extractFilterQueryParameters($request->query->all());
-        [$referrerUrl] = explode('?', $request->server->get('HTTP_REFERER'));
+        [$referrerUrl] = $request->server->has('HTTP_REFERER')
+            ? explode('?', $request->server->get('HTTP_REFERER'))
+            : ['/'];
 
         $headers   = [];
         $relations = [
