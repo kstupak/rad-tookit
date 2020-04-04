@@ -44,6 +44,10 @@ trait FilterableRepositoryTrait
             $query->andWhere($query->expr()->orX(...$queries));
         }
 
+        foreach ($this->orderByFields as $field => $direction) {
+            $query->addOrderBy(sprintf('%s.%s', $this->entityAlias, $field), $direction ?? 'ASC');
+        }
+
         $query->setFirstResult($search->getPagination()->getOffset())
             ->setMaxResults($search->getPagination()->getPageSize());
 
