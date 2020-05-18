@@ -15,6 +15,7 @@ namespace KStupak\RAD\Model\Filter;
 
 use KStupak\RAD\Exception\FilterException;
 
+/** @property $map = [] */
 trait FilterMap
 {
     public function getFilterClassByName(string $name): string

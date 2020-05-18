@@ -9,26 +9,33 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace KStupak\RAD\Model\Filter;
 
 use Doctrine\ORM\QueryBuilder;
+use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @property string $columnName
  * @method string getParameterName()
  * @method string getColumnName(string $alias)
  */
-trait ScalarFilter
+trait UuidFilter
 {
-    /** @var string|int|float */
+    /** @var UuidInterface */
     private $value;
     private ?bool $inverted;
 
     private function __construct($value, ?bool $inverted = false)
     {
-        $this->value    = $value;
+        if (
+            !(is_string($value) && Uuid::isValid($value)) &&
+            !(is_object($value) && ($value instanceof UuidInterface))
+        ) {
+            throw new \InvalidArgumentException('Value must be either a valid UUIDv4 string or object implementing UuidInterface');
+        }
+
+        $this->value    = is_string($value) ? Uuid::fromString($value) : $value;
         $this->inverted = $inverted;
     }
 
@@ -45,10 +52,10 @@ trait ScalarFilter
             : $expression;
 
         $builder->andWhere($expression)
-            ->setParameter($this->getParameterName(), $this->value);
+            ->setParameter($this->getParameterName(), $this->value->getBytes());
     }
 
-    public function getValue()
+    public function getValue(): UuidInterface
     {
         return $this->value;
     }

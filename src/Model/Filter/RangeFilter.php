@@ -15,8 +15,12 @@ namespace KStupak\RAD\Model\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 
-/** @property string $columnName */
-/** @property string $exclude */ // possible values are: start, end, both, none
+/**
+ * @property string $columnName
+ * @property string $exclude // possible values are: start, end, both, none
+ * @method string getParameterName()
+ * @method string getColumnName(string $alias)
+ */
 trait RangeFilter
 {
     private $rangeStart;
@@ -64,15 +68,5 @@ trait RangeFilter
     public function getValue(): array
     {
         return [$this->rangeStart, $this->rangeEnd];
-    }
-
-    private function getColumnName(string $alias): string
-    {
-        return sprintf('%s.%s', $alias, $this->columnName);
-    }
-
-    private function getParameterName(string $position): string
-    {
-        return sprintf('%s_range%s', $this->columnName, ucwords($position));
     }
 }

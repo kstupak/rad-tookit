@@ -15,7 +15,11 @@ namespace KStupak\RAD\Model\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 
-/** @property string $columnName */
+/**
+ * @property string $columnName
+ * @method string getParameterName()
+ * @method string getColumnName(string $alias)
+ */
 trait MultipleValuesFilter
 {
     private array $value = [];
@@ -46,15 +50,5 @@ trait MultipleValuesFilter
     public function getValue(): array
     {
         return $this->value;
-    }
-
-    private function getColumnName(string $alias): string
-    {
-        return sprintf('%s.%s', $alias, $this->columnName);
-    }
-
-    private function getParameterName(): string
-    {
-        return sprintf('%sValue', $this->columnName);
     }
 }
